@@ -12,6 +12,10 @@ import RideCard from "@/components/RideCard";
 import { icons, images } from "@/constants";
 import GoogleTextInput from "@/components/GoogleTextInput";
 import Map from "@/components/Map";
+import { useLocationStore } from "@/store";
+import { useEffect, useState } from "react";
+import * as Location from "expo-location";
+import { router } from "expo-router";
 
 const recentRides = [
   {
@@ -123,7 +127,39 @@ const recentRides = [
 const Home = () => {
   const { user } = useUser();
   const loading = false;
+  const { setUserLocation, setDestinationLocation } = useLocationStore();
+  const [hasPermission, setHasPermission] = useState<boolean>(false);
   const signoutHandler = () => {};
+  const handleDestinationPress = (location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => {
+    setDestinationLocation(location);
+    // @ts-ignore
+    router.push("/(root)/find-ride");
+  };
+
+  useEffect(() => {
+    const requestLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setHasPermission(false);
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync();
+      const address = await Location.reverseGeocodeAsync({
+        latitude: location?.coords.latitude,
+        longitude: location?.coords.longitude,
+      });
+      setUserLocation({
+        latitude: location?.coords.latitude,
+        longitude: location?.coords.longitude,
+        address: `${address[0].name}, ${address[0].region}`,
+      });
+    };
+    requestLocation();
+  }, []);
   return (
     <SafeAreaView>
       <FlatList
@@ -173,6 +209,7 @@ const Home = () => {
             <GoogleTextInput
               icon={icons.search}
               containerStyle="bg-white shadow-md shadow-neutral-300"
+              handlePress={handleDestinationPress}
             />
             <>
               <Text className="text-xl font-JakartaBold mt-5 mb-3">
