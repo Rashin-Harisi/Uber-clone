@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import {
   ActivityIndicator,
   FlatList,
@@ -21,10 +21,15 @@ import { useFetch } from "@/lib/fetch";
 const Home = () => {
   const { user } = useUser();
   const { data: recentRides, loading } = useFetch(`/(api)/ride/${user?.id}`);
-  console.log("recentRides", recentRides);
+  //console.log("recentRides", recentRides);
   const { setUserLocation, setDestinationLocation } = useLocationStore();
   const [hasPermission, setHasPermission] = useState<boolean>(false);
-  const signoutHandler = () => {};
+  const { signOut } = useAuth();
+
+  const signoutHandler = () => {
+    signOut();
+    router.replace("/(auth)/sign-in");
+  };
   const handleDestinationPress = (location: {
     latitude: number;
     longitude: number;
@@ -59,7 +64,7 @@ const Home = () => {
     <SafeAreaView>
       <FlatList
         // @ts-ignore
-        data={recentRides}
+        data={recentRides?.slice(0, 3)}
         renderItem={({ item }) => <RideCard ride={item} />}
         keyExtractor={(item, index: number) => index.toString()}
         className="px-5"

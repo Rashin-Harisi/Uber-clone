@@ -1,9 +1,20 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Alert } from "react-native";
 import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
+import { useOAuth } from "@clerk/clerk-expo";
+import { useCallback } from "react";
+import { googleOAuth } from "@/lib/auth";
+import { router } from "expo-router";
 
 const OAuth = () => {
-  const googleSigninHandler = () => {};
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+  const googleSigninHandler = useCallback(async () => {
+    const result = await googleOAuth(startOAuthFlow);
+    if (result.code === "session_exists" || result.code === "success") {
+      router.replace("/(root)/(tabs)/home");
+    }
+  }, []);
+
   return (
     <View>
       <View className="flex flex-row justify-center items-center mt-4 gap-x-3">
