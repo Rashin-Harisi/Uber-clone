@@ -36,6 +36,21 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": "https://uber.com/"
+      },
+      "eas": {
+        "projectId": "1798974b-99c9-42ca-8f04-747e816996c0"
+      }
+    },
+    "owner": "rashin.harisi",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/1798974b-99c9-42ca-8f04-747e816996c0"
     }
   }
 }

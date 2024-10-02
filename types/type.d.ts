@@ -1,5 +1,6 @@
 import { TextInputProps, TouchableOpacityProps } from "react-native";
 import React from "react";
+import { QuickReplies } from "react-native-gifted-chat";
 
 declare interface CustomButtonProps extends TouchableOpacityProps {
   title: string;
@@ -134,4 +135,17 @@ declare interface PaymentProps {
   amount: string;
   driverId: number;
   rideTime: number;
+}
+
+declare module "react-native-vector-icons/ FontAwesome";
+
+declare interface ChatDataProps {
+  _id: string;
+  text: string;
+  createdAt: Date;
+  user: {
+    _id: string;
+    name: "User" | "Admin";
+    avatar: string;
+  };
 }

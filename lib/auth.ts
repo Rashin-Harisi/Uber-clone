@@ -32,7 +32,7 @@ export const googleOAuth = async (startOAuthFlow: any) => {
     const { createdSessionId, signUp, setActive } = await startOAuthFlow({
       redirectUrl: Linking.createURL("/(root)/(tabs)/home"),
     });
-    console.log("signup", signUp);
+    //console.log("signup", signUp);
     if (createdSessionId) {
       if (setActive) {
         await setActive({ session: createdSessionId });
